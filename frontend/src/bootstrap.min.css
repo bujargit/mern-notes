@@ -4522,6 +4522,15 @@ h2.card-header .accordion-button:focus {
 .card-header:first-child {
   border-radius: calc(0.25rem - 1px) calc(0.25rem - 1px) 0 0;
 }
+.accordion-item {
+  position: relative;
+}
+
+.accordion-item .edit-delete-holder {
+  position: absolute;
+  right: 20px;
+  top: 7px;
+}
 .accordion-body {
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;

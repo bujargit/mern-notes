@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from "axios";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import MainScreen from "../../components/MainScreen";
 import { Link } from "react-router-dom";
@@ -14,38 +14,68 @@ const RegisterScreen = () => {
   );
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [message, setMessage] = useState("");
-  const [picMessage, setPicMessage] = useState("");
+  const [message, setMessage] = useState(null);
+  const [picMessage, setPicMessage] = useState(null);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const submitHandler = async (e) => {
     e.preventDefault();
 
+    console.log(email);
+
     if (password !== confirmPassword) {
       setMessage("Passwords do not match");
     } else {
+      setMessage(null);
+      try {
+        const config = {
+          headers: {
+            "Content-type": "application/json",
+          },
+        };
+
+        setLoading(true);
+
+        const { data } = await axios.post(
+          "/api/users",
+          { name, pic, email, password },
+          config
+        );
+
+        setLoading(false);
+        localStorage.setItem("userInfo", JSON.stringify(data));
+      } catch (error) {
+        setError(error.response.data.message);
+      }
     }
-    setMessage(null);
-    try {
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-        },
-      };
+  };
 
-      setLoading(true);
+  const postDetails = (pics) => {
+    if (!pics) {
+      return setPicMessage("Please Slelect an Image");
+    }
+    setPicMessage(null);
 
-      const { data } = await axios.post(
-        "/api/users/register",
-        { name, pic, email, password },
-        config
-      );
-
-      setLoading(false);
-      localStorage.setItem("userInfo", JSON.stringify(data));
-    } catch (error) {
-      setError(error.response.data.message);
+    if (pics.type === "image/jpeg" || pics.type === "image/png") {
+      const data = new FormData();
+      data.append("file", pics);
+      data.append("upload_preset", "notezipper");
+      data.append("cloud_name", "dtopziiy9");
+      fetch("https://api.cloudinary.com/v1_1/dtopziiy9/image/upload", {
+        method: "post",
+        body: data,
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          setPic(data.url.toString());
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      return setPicMessage("Please Slelect an Image");
     }
   };
 
@@ -96,10 +126,14 @@ const RegisterScreen = () => {
             />
           </Form.Group>
 
+          {picMessage && (
+            <ErrorMessage variant="danger">{picMessage}</ErrorMessage>
+          )}
+
           <Form.Group>
             <Form.Label>Profile Picture</Form.Label>
             <Form.Control
-              onChange={(e) => setPic(e.target.files[0])}
+              onChange={(e) => postDetails(e.target.files[0])}
               id="custom-file"
               type="file"
               label="Upload Profile Picture"

@@ -34,21 +34,21 @@ const MyNotes = () => {
       {notes.map((note) => (
         <Accordion className="card" style={{ margin: 10 }} key={note._id}>
           <Accordion.Item eventKey="0">
+            <div className="edit-delete-holder">
+              <Button href={`/note/${note._id}`}>Edit</Button>
+              <Button
+                variant="danger"
+                className="mx-2"
+                onClick={() => deleteHandler(note._id)}
+              >
+                Delete
+              </Button>
+            </div>
             <Accordion.Header
               className="card-header"
               style={{ display: "flex" }}
             >
               {note.title}
-              <div className="edit-delete-holder">
-                <Button hef={`/note/${note._id}`}>Edit</Button>
-                <Button
-                  variant="danger"
-                  className="mx-2"
-                  onClick={() => deleteHandler(note._id)}
-                >
-                  Delete
-                </Button>
-              </div>
             </Accordion.Header>
             <Accordion.Body>
               <h4>
