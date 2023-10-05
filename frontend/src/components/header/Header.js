@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../actions/userActions";
+import { useEffect } from "react";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -17,6 +18,8 @@ const Header = () => {
     dispatch(logout());
     navigate("/");
   };
+
+  useEffect(() => {}, [userInfo]);
   return (
     <Navbar expand="lg" variant="dark" bg="primary">
       <Container>

@@ -1,10 +1,12 @@
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import MainScreen from "../../components/MainScreen";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ErrorMessage from "../../components/ErrorMessage";
 import Loading from "../../components/Loading";
+import { useDispatch, useSelector } from "react-redux";
+import { register } from "../../actions/userActions";
 
 const RegisterScreen = () => {
   const [email, setEmail] = useState("");
@@ -16,67 +18,55 @@ const RegisterScreen = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState(null);
   const [picMessage, setPicMessage] = useState(null);
-  const [error, setError] = useState(false);
-  const [loading, setLoading] = useState(false);
 
-  const submitHandler = async (e) => {
-    e.preventDefault();
+  const dispatch = useDispatch();
 
-    console.log(email);
+  const navigate = useNavigate();
 
-    if (password !== confirmPassword) {
-      setMessage("Passwords do not match");
-    } else {
-      setMessage(null);
-      try {
-        const config = {
-          headers: {
-            "Content-type": "application/json",
-          },
-        };
-
-        setLoading(true);
-
-        const { data } = await axios.post(
-          "/api/users",
-          { name, pic, email, password },
-          config
-        );
-
-        setLoading(false);
-        localStorage.setItem("userInfo", JSON.stringify(data));
-      } catch (error) {
-        setError(error.response.data.message);
-      }
-    }
-  };
+  const userRegister = useSelector((state) => state.userRegister);
+  const { loading, error, userInfo } = userRegister; 
 
   const postDetails = (pics) => {
-    if (!pics) {
-      return setPicMessage("Please Slelect an Image");
+    if (
+      pics ===
+      "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"
+    ) {
+      return setPicMessage("Please Select an Image");
     }
     setPicMessage(null);
-
     if (pics.type === "image/jpeg" || pics.type === "image/png") {
       const data = new FormData();
       data.append("file", pics);
       data.append("upload_preset", "notezipper");
-      data.append("cloud_name", "dtopziiy9");
+      data.append("cloud_name", "piyushproj");
       fetch("https://api.cloudinary.com/v1_1/dtopziiy9/image/upload", {
         method: "post",
         body: data,
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log(data);
           setPic(data.url.toString());
         })
         .catch((err) => {
           console.log(err);
         });
     } else {
-      return setPicMessage("Please Slelect an Image");
+      return setPicMessage("Please Select an Image");
     }
+  };
+
+  useEffect(() => {
+    if (userInfo) {
+      navigate("/");
+    }
+  }, [navigate, userInfo]);
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+
+    if (password !== confirmPassword) {
+      setMessage("Password do not match");
+    } else dispatch(register(name, email, password, pic));
   };
 
   return (
@@ -137,7 +127,7 @@ const RegisterScreen = () => {
               id="custom-file"
               type="file"
               label="Upload Profile Picture"
-              custom
+              custom="true"
             />
           </Form.Group>
 
