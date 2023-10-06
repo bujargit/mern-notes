@@ -2,23 +2,38 @@ import React, { useEffect, useState } from "react";
 import MainScreen from "../../components/MainScreen";
 import { Button, Card, Form } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { createNoteAction } from "../../actions/notesActions";
+import { updateNoteAction } from "../../actions/notesActions";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
 import ReactMarkdown from "react-markdown";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
 
-function CreateNote() {
+function SingleNote() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [category, setCategory] = useState("");
+  const [date, setDate] = useState("");
 
   const dispatch = useDispatch();
 
-  const noteCreate = useSelector((state) => state.noteCreate);
-  const { loading, error } = noteCreate;
+  const noteUpdate = useSelector((state) => state.noteUpdate);
+  const { loading, error } = noteUpdate;
 
   //   console.log(note);
+
+  let { id } = useParams();
+
+  useEffect(() => {
+    const fetching = async () => {
+      const { data } = await axios.get(`/api/notes/${id}`);
+      setTitle(data.title);
+      setContent(data.content);
+      setCategory(data.category);
+      setDate(data.updatedAt);
+    };
+    fetching();
+  }, [id, date]);
 
   const resetHandler = () => {
     setTitle("");
@@ -28,23 +43,21 @@ function CreateNote() {
 
   const navigate = useNavigate();
 
-  const submitHandler = (e) => {
+  const updateHandler = (e) => {
     e.preventDefault();
+    dispatch(updateNoteAction(id, title, content, category));
     if (!title || !content || !category) return;
-    dispatch(createNoteAction(title, content, category));
 
     resetHandler();
     navigate("/mynotes");
   };
 
-  useEffect(() => {}, []);
-
   return (
-    <MainScreen title="Create a Note">
+    <MainScreen title="Edit Note">
       <Card>
-        <Card.Header>Create a new Note</Card.Header>
+        <Card.Header>Edit your Note</Card.Header>
         <Card.Body>
-          <Form onSubmit={submitHandler}>
+          <Form onSubmit={updateHandler}>
             {error && <ErrorMessage variant="danger">{error}</ErrorMessage>}
             <Form.Group controlId="title">
               <Form.Label>Title</Form.Label>
@@ -86,20 +99,24 @@ function CreateNote() {
             </Form.Group>
             {loading && <Loading size={50} />}
             <Button type="submit" variant="primary">
-              Create Note
+              Update Note
             </Button>
-            <Button className="mx-2" onClick={resetHandler} variant="danger">
-              Reset Feilds
+            <Button
+              className="mx-2"
+              variant="danger"
+              // onClick={() => deleteHandler(match.params.id)}
+            >
+              Delete Note
             </Button>
           </Form>
         </Card.Body>
 
         <Card.Footer className="text-muted">
-          Creating on - {new Date().toLocaleDateString()}
+          Updating on - {date.substring(0, 10)}
         </Card.Footer>
       </Card>
     </MainScreen>
   );
 }
 
-export default CreateNote;
+export default SingleNote;

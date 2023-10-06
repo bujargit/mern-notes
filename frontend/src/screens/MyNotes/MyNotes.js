@@ -18,6 +18,12 @@ const MyNotes = () => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
+  const noteCreate = useSelector((state) => state.noteCreate);
+  const { success: successCreate } = noteCreate;
+
+  const noteUpdate = useSelector((state) => state.noteUpdate);
+  const { success: successUpdate } = noteUpdate;
+
   const navigate = useNavigate();
 
   const deleteHandler = (id) => {
@@ -32,7 +38,7 @@ const MyNotes = () => {
     if (!userInfo) {
       navigate("/");
     }
-  }, [dispatch]);
+  }, [dispatch, successCreate, navigate, userInfo, successUpdate]);
 
   return (
     <MainScreen title={`Welcome Back ${userInfo.name}...`}>
