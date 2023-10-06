@@ -43,7 +43,7 @@ const MyNotes = () => {
       </Link>
       {error && <ErrorMessage variant="danger">{error}</ErrorMessage>}
       {loading && <Loading />}
-      {notes?.map((note) => (
+      {notes?.reverse().map((note) => (
         <Accordion className="card" style={{ margin: 10 }} key={note._id}>
           <Accordion.Item eventKey="0">
             <div className="edit-delete-holder">
