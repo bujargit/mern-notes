@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import MainScreen from "../../components/MainScreen";
 import { Button, Card, Form } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { updateNoteAction } from "../../actions/notesActions";
+import { deleteNoteAction, updateNoteAction } from "../../actions/notesActions";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
 import ReactMarkdown from "react-markdown";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
 
 function SingleNote() {
   const [title, setTitle] = useState("");
@@ -20,9 +20,19 @@ function SingleNote() {
   const noteUpdate = useSelector((state) => state.noteUpdate);
   const { loading, error } = noteUpdate;
 
+  const noteDelete = useSelector((state) => state.noteDelete);
+  const { loading: loadingDelete, error: errorDelete } = noteDelete;
+
   //   console.log(note);
 
   let { id } = useParams();
+
+  const deleteHandler = (id) => {
+    if (window.confirm("Are you sure?")) {
+      dispatch(deleteNoteAction(id));
+    }
+    navigate("/mynotes");
+  };
 
   useEffect(() => {
     const fetching = async () => {
@@ -58,7 +68,11 @@ function SingleNote() {
         <Card.Header>Edit your Note</Card.Header>
         <Card.Body>
           <Form onSubmit={updateHandler}>
+            {loadingDelete && <Loading />}
             {error && <ErrorMessage variant="danger">{error}</ErrorMessage>}
+            {errorDelete && (
+              <ErrorMessage variant="danger">{errorDelete}</ErrorMessage>
+            )}
             <Form.Group controlId="title">
               <Form.Label>Title</Form.Label>
               <Form.Control
@@ -104,7 +118,7 @@ function SingleNote() {
             <Button
               className="mx-2"
               variant="danger"
-              // onClick={() => deleteHandler(match.params.id)}
+              onClick={() => deleteHandler(id)}
             >
               Delete Note
             </Button>
