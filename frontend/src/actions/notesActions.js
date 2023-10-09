@@ -128,37 +128,36 @@ export const updateNoteAction =
     }
   };
 
-export const deleteNoteAction = (id) => async (dispatch, getState) => {
-  try {
-    dispatch({
-      type: NOTES_DELETE_REQUEST,
-    });
-
-    const {
-      userLogin: { userInfo },
-    } = getState();
-
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
-
-    const { data } = await axios.delete(`/api/notes/${id}`, config);
-
-    dispatch({
-      type: NOTES_DELETE_SUCCESS,
-      payload: data,
-    });
-  } catch (err) {
-    const message =
-      err.response && err.response.data.message
-        ? err.response.data.message
-        : err.message;
-    dispatch({
-      type: NOTES_DELETE_FAIL,
-      payload: message,
-    });
-  }
-};
+  export const deleteNoteAction = (id) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: NOTES_DELETE_REQUEST,
+      });
+  
+      const {
+        userLogin: { userInfo },
+      } = getState();
+  
+      const config = {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+  
+      const { data } = await axios.delete(`/api/notes/${id}`, config);
+  
+      dispatch({
+        type: NOTES_DELETE_SUCCESS,
+        payload: data,
+      });
+    } catch (err) {
+      const message =
+        err.response && err.response.data.message
+          ? err.response.data.message
+          : err.message;
+      dispatch({
+        type: NOTES_DELETE_FAIL,
+        payload: message,
+      });
+    }
+  };
