@@ -81,8 +81,8 @@ const updateUserProfile = asyncHandler(async (req, res) => {
       token: generateToken(updateUser._id),
     });
   } else {
-    res.status(400)
-    throw new Error("User not found")
+    res.status(400);
+    throw new Error("User not found");
   }
 });
 

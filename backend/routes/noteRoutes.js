@@ -1,8 +1,8 @@
 const express = require("express");
 const {
   getNotes,
-  createNote,
   getNoteById,
+  createNote,
   updateNote,
   deleteNote,
 } = require("../controllers/notesController");
