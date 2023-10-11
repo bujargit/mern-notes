@@ -85,10 +85,10 @@ function CreateNote() {
               />
             </Form.Group>
             {loading && <Loading size={50} />}
-            <Button type="submit" variant="primary">
+            <Button type="submit" variant="primary" className="mt-2">
               Create Note
             </Button>
-            <Button className="mx-2" onClick={resetHandler} variant="danger">
+            <Button className="mt-2 mx-2" onClick={resetHandler} variant="danger">
               Reset Feilds
             </Button>
           </Form>

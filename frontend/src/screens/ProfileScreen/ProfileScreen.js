@@ -134,7 +134,7 @@ const ProfileScreen = () => {
                   custom="true"
                 />
               </Form.Group>
-              <Button type="submit" variant="primary">
+              <Button type="submit" variant="primary" className="mt-2">
                 Update
               </Button>
             </Form>

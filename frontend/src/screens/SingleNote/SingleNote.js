@@ -112,11 +112,11 @@ function SingleNote() {
               />
             </Form.Group>
             {loading && <Loading size={50} />}
-            <Button type="submit" variant="primary">
+            <Button type="submit" variant="primary" className="mt-2">
               Update Note
             </Button>
             <Button
-              className="mx-2"
+              className="mt-2 mx-2"
               variant="danger"
               onClick={() => deleteHandler(id)}
             >
