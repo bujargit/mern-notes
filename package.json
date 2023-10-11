@@ -1,7 +1,7 @@
 {
   "name": "notezipper",
   "version": "1.0.0",
-  "description": "",
+  "description": "Note Zipper",
   "main": "server.js",
   "scripts": {
     "start": "nodemon backend/server.js",
