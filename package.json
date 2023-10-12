@@ -9,7 +9,7 @@
     "dev": "concurrently \"npm start\" \"npm run client\"",
     "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
   },
-  "author": "Bujar Hyseni",
+  "author": "Bujar Hysenii",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
