@@ -40,7 +40,9 @@ const Header = ({ setSearch }) => {
 
           {userInfo ? (
             <Nav>
-              <Nav.Link to="/mynotes">My Notes</Nav.Link>
+              <Link className="nav-link" to="/mynotes">
+                My Notes
+              </Link>
               <NavDropdown title={userInfo?.name} id="basic-nav-dropdown">
                 <NavDropdown.Item href="/profile">My Profile</NavDropdown.Item>
                 <NavDropdown.Divider />
@@ -51,7 +53,9 @@ const Header = ({ setSearch }) => {
             </Nav>
           ) : (
             <Nav>
-              <Nav.Link to="/login">Login</Nav.Link>
+              <Link className="nav-link" to="/login">
+                Login
+              </Link>
             </Nav>
           )}
         </Navbar.Collapse>
